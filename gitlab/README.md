@@ -1,5 +1,8 @@
 # BugBounty Gitlab Pipelines
 
+# How to use them
+* Create a **New** private gitlab group (no subgroup) (ie `RANDOM-hash`) (This will make sure you dont run out of gitlab runner time on your other groups)
+* Create a private project under the new group ie `program-name`
 * Rename the `pipelines` folder into `.pipelines` and place under your gitlab project root directory
 * Rename `dot-gitlab-ci.yml` into `.gitlab.-ci.yml` and place under your gitlab project root directory
 * Create a file `domains.list` with your inscope domains
@@ -8,3 +11,5 @@
   * `THREADS`: The limit to the threads that will be applied on those tools that support it (default: `3`)
   * `RATE_LIMIT`: The rate limit to be applied on those tools that support it (default: `5`)
   * `CSP_BASE`: A keyword to search for when we run `cspparse` (default: `example`)
+* Commit and push your changes and watch the pipeline run
+![Gitlab CICD => Pipelines](../images/gitlab-cicd-piplines.png)
