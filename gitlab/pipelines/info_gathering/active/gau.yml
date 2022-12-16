@@ -1,0 +1,18 @@
+gau:
+  image: debian:bullseye-slim
+  stage: info_gathering:active
+  before_script:
+#    - chmod +x bin/*
+  script:
+    - cat ${DOMAINS_LIST} | ./bin/gau --blacklist png,jpg,gif,ttf,woff --fp --o ${PWD}/gau-urls.txt --verbose --threads 3
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - gau-urls.txt
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

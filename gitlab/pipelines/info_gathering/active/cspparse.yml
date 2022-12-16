@@ -1,0 +1,19 @@
+cspparse:
+  image: golang:latest
+#  image: debian:bullseye-slim
+  stage: info_gathering:active
+  before_script:
+#    - chmod +x bin/*
+  script:
+    - for DOMAIN in $(<${DOMAINS_LIST});do ./bin/cspparse "https://${DOMAIN}" ${CSP_BASE} >"${DOMAIN}-csp.log" || true ;done
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - ./*csp.log
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

@@ -1,0 +1,40 @@
+pre_fetch_binaries:
+  image: debian:bullseye-slim
+  stage: initialization
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq wget unzip
+    - wget -q --no-check-certificate https://github.com/OWASP/Amass/releases/download/v3.21.2/amass_linux_amd64.zip
+    - wget -q --no-check-certificate https://github.com/ffuf/ffuf/releases/download/v1.5.0/ffuf_1.5.0_linux_amd64.tar.gz
+    - wget -q --no-check-certificate https://github.com/lc/gau/releases/download/v2.1.2/gau_2.1.2_linux_amd64.tar.gz
+    - wget -q --no-check-certificate https://github.com/stavinski/certgrabber/releases/download/v1.0.4/certgrabber_1.0.4_Linux_x86_64
+    - wget -q --no-check-certificate https://github.com/projectdiscovery/subfinder/releases/download/v2.5.5/subfinder_2.5.5_linux_amd64.zip
+    - wget -q --no-check-certificate https://github.com/projectdiscovery/httpx/releases/download/v1.2.5/httpx_1.2.5_linux_amd64.zip
+    - wget -q --no-check-certificate https://wordlists-cdn.assetnote.io/data/manual/raft-medium-directories.txt
+    - mkdir -p bin
+    - unzip -o amass_linux_amd64.zip
+    - unzip -o subfinder_2.5.5_linux_amd64.zip
+    - unzip -o httpx_1.2.5_linux_amd64.zip
+    - tar -zxvf gau_2.1.2_linux_amd64.tar.gz
+    - tar -zxvf ffuf_1.5.0_linux_amd64.tar.gz
+    - mv ffuf gau httpx subfinder bin/
+    - mv amass_linux_amd64/amass bin/
+    - mv certgrabber_1.0.4_Linux_x86_64 bin/certgrabber
+  script:
+#    - wget --no-check-certificate https://cdn.echoctf.dev/engagement-template_pre_fetch_binaries.zip
+#    - wget --no-check-certificate https://cdn.echoctf.dev/engagement-template_go_binaries.zip
+#    - unzip engagement-template_pre_fetch_binaries.zip
+#    - unzip engagement-template_go_binaries.zip
+    - chmod +x bin/*
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - bin/*
+      - raft-medium-directories.txt
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

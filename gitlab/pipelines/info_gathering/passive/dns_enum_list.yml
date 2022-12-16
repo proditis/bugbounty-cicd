@@ -1,0 +1,30 @@
+dns_enum_list:
+  stage: info_gathering:passive
+  before_script:
+    - apt-get update
+    - apt-get install -yqq dnsutils
+    - mkdir -p host
+  script:
+    - |
+      {
+      for DOMAIN in $(<${DOMAINS_LIST});do
+      host -t txt selector1._domainkey.${DOMAIN} >> host/dkim.log || true
+      host -t txt selector2._domainkey.${DOMAIN} >> host/dkim.log || true
+      host -t txt ${DOMAIN} >> host/txt.log || true
+      host -t ns  ${DOMAIN} >> host/ns.log || true
+      host -t mx  ${DOMAIN} >> host/mx.log || true
+      host -t any ${DOMAIN} >> host/any.log || true
+      ( host ${DOMAIN} || true ) >> host/a.log
+      done
+      }
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - host/*.log
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+#    - if: $CI_PIPELINE_SOURCE == "web"
+    - exists:
+      - "${DOMAINS_LIST}"
+#      when: manual

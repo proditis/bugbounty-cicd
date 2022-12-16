@@ -1,0 +1,62 @@
+curl:
+  stage: information_gathering
+  script:
+    - echo "Dummy job to kick start the other two"
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: manual
+
+curl-http:domainslist:
+  image: debian:bullseye-slim
+  stage: information_gathering
+  needs: [ curl ]
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq curl ca-certificates
+    - mkdir -p curls
+  script:
+    - for f in $(<$DOMAINS_LIST); do curl -kiL -H "Accept: */*" -H "Content-type: */*" "${f}" > curls/${f}.http || echo "${f} failed"; done
+    - find curls/ -type -size 0 -exec rm "{}" \;
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - curls/*.http
+
+curl-https:domainslist:
+  image: debian:bullseye-slim
+  stage: information_gathering
+  needs: [ curl ]
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq curl ca-certificates
+    - mkdir -p curls
+  script:
+    - for f in $(<$DOMAINS_LIST); do curl -kiL -H "Accept: */*" -H "Content-type: */*" "https://${f}" > curls/${f}.https || echo "${f} failed"; done
+    - find curls/ -type -size 0 -exec rm "{}" \;
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - curls/*.https
+
+curl:gau:
+  image: debian:bullseye-slim
+  stage: information_gathering
+  needs: [ curl, gau ]
+  dependencies: [ gau ]
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq curl ca-certificates
+    - mkdir -p curls
+  script:
+    - |
+      {
+      for f in $(<gau-urls.txt); do
+      echo "${f}"
+      curl -k -iL -H "Accept: */*" -H "Content-type: */*" "${f}" || true
+      echo "---------------------"
+      done
+      } 2>&1 | tee -a curls/gau.curls
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - curls/gau.curls

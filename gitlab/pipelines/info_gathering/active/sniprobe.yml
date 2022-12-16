@@ -1,0 +1,18 @@
+sniprobe:
+  image: golang:latest
+  stage: info_gathering:active
+  before_script:
+#    - chmod +x bin/*
+  script:
+    - for DOMAIN in $(<${DOMAINS_LIST});do ./bin/sniprobe "${DOMAIN}" 443 2>"${DOMAIN}-sni.log"; done
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - ./*sni.log
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

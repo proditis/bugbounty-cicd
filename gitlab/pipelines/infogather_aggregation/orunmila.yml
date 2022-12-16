@@ -1,0 +1,32 @@
+orunmila:
+  image: debian:bullseye-slim
+  stage: infogather_aggregation
+#  needs: [ "orunmila:init", "pre_fetch_binaries" ]
+  script:
+    - uname -a
+    - pwd
+    - ls -la
+#    - chmod +x bin/*
+    - ls -al bin/
+    - bin/orunmila info
+    - bin/orunmila import -tags httpx httpx.log
+    - bin/orunmila import -tags cspparse *csp.log
+    - bin/orunmila import -tags subfinder subfinder.log
+    - bin/orunmila import -tags assetfinder assetfinder.log
+    - bin/orunmila import -tags gau gau-urls.txt
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - ./*.log
+      - orunmila.db
+      - host/*.log
+      - certs/*
+      - logs/*
+      - gau-urls.txt
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

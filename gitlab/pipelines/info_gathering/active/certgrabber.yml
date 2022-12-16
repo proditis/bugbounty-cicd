@@ -1,0 +1,26 @@
+# Attempt to grab the certificates including chain from the given domain.list
+# At the end convert each cert to text format
+# Attempt to grab the certificates including chain from the given domain.list
+# At the end convert each cert to text format
+certgrabber:
+  image: debian:bullseye-slim
+  stage: info_gathering:active
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq openssl
+    - mkdir -p certs
+#    - chmod +x bin/*
+  script:
+    - for FQDN in $(<${DOMAINS_LIST});do ./bin/certgrabber -c -o ${PWD}/certs/${FQDN}.x509 ${FQDN}:443 ;done || true
+    - for _cert in certs/*.x509;do openssl x509 -in ${_cert} -text > ${_cert}.txt ;done
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - certs/*
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

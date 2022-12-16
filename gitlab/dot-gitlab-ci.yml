@@ -1,0 +1,44 @@
+# Rename this into .gitlab-ci.yml
+variables:
+  DEBIAN_FRONTEND: noninteractive
+  DOMAINS_LIST: domains.list
+  THREADS: 3
+  RATE_LIMIT: 5
+  CSP_BASE: example
+
+## INCLUDES
+include:
+# 0init
+  - .pipelines/0init/go.yml
+  - .pipelines/0init/orunmila.yml
+  - .pipelines/0init/pre_fetch_binaries.yml
+# information_gathering:passive
+  - .pipelines/info_gathering/passive/assetfinder.yml
+  - .pipelines/info_gathering/passive/dns_enum_list.yml
+#  - .pipelines/info_gathering/passive/kali_enum_subs.yml
+  - .pipelines/info_gathering/passive/subfinder.yml
+# info_gathering:active
+  - .pipelines/info_gathering/active/amass_enum.yml
+  - .pipelines/info_gathering/active/certgrabber.yml
+  - .pipelines/info_gathering/active/cspparse.yml
+  - .pipelines/info_gathering/active/gau.yml
+  - .pipelines/info_gathering/active/httpx.yml
+  - .pipelines/info_gathering/active/sniprobe.yml
+# Aggregate infogather stage
+  - .pipelines/infogather_aggregation/orunmila.yml
+# Scanning
+#  - .pipelines/scanning/bbot.yml
+#  - .pipelines/scanning/ffuf.yml
+#  - .pipelines/scanning/nmap.yml
+# Left
+#  - .pipelines/info_gathering/curl.yml
+#  - .pipelines/info_gathering/subjack.yml
+
+
+stages:
+#  - dummystart
+  - initialization
+  - info_gathering:passive
+  - info_gathering:active
+  - infogather_aggregation
+  - scanning

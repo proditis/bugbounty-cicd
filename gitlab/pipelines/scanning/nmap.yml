@@ -1,0 +1,21 @@
+nmap:
+  image: debian:bullseye-slim
+  stage: scanning
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq nmap xsltproc
+  script:
+    - nmap -T4 -sV -oX nmap.xml -iL ${DOMAINS_LIST}
+    - xsltproc nmap.xml -o nmap.html
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - nmap.xml
+      - nmap.html
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

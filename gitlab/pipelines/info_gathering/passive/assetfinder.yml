@@ -1,0 +1,16 @@
+assetfinder:
+  stage: info_gathering:passive
+  image: golang:latest
+  before_script:
+  script:
+    - for DOMAIN in $(<${DOMAINS_LIST});do ( ./bin/assetfinder -subs-only ${DOMAIN} || true ) ;done 2>&1 > assetfinder.log
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - assetfinder.log
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+#    - if: $CI_PIPELINE_SOURCE == "web"
+    - exists:
+      - "${DOMAINS_LIST}"

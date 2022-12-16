@@ -1,0 +1,19 @@
+orunmila:init:
+  image: golang:latest
+#  image: debian:bullseye-slim
+  stage: initialization
+  needs: [ "pre_fetch_binaries", "go:init" ]
+  before_script:
+    - ls -la
+  script:
+    - ./bin/orunmila describe Database for project $CI_PROJECT_NAME
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - orunmila.db
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"

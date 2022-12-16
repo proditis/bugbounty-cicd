@@ -1,0 +1,26 @@
+variables:
+  website: "https://test.site/"
+  scantype: "zap-baseline.py"
+  report: "owasp-zap-report.html"
+
+scan:
+  stage: info_gathering
+  image: owasp/zap2docker-stable
+  allow_failure: true
+  before_script:
+    - mkdir -p /zap/wrk
+  script:
+    - pwd
+    - ls
+    - $scantype -t $website -m 1 -d -I -r $report
+    - cp /zap/wrk/$report .
+  artifacts:
+    paths: [$report]
+
+upload:
+  stage: build
+  dependencies:
+    - scan
+  image: ubuntu:20.04
+  script:
+    - ls

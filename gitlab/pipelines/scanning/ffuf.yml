@@ -1,0 +1,21 @@
+#
+# Run ffuf on the domains found in domain.list
+#
+ffuf:dir:
+  image: debian:bullseye-slim
+  stage: scanning
+  before_script:
+#    - chmod +x bin/*
+  script:
+    - for DOMAIN in $(<${DOMAINS_LIST});do bin/ffuf -o ${PWD}/${DOMAIN}-fuff-all.json  -t 1 -p 0.5 -rate ${RATE_LIMIT} -w raft-medium-directories.txt  -recursion -recursion-depth 2 -u https://${DOMAIN}/FUZZ -mc 401,402,403,200,201,500,501,502,300,301,302,530 ;done
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - ./*-fuff-all.json
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

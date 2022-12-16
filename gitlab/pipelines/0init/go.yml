@@ -1,0 +1,25 @@
+go:init:
+  image: golang:latest
+  stage: initialization
+  before_script:
+    - ls -la
+#    - go install github.com/OWASP/Amass/v3/...@master
+#    - go install github.com/projectdiscovery/subfinder/v2/cmd/subfinder@latest
+    - go install github.com/tomnomnom/assetfinder@latest
+    - go install github.com/proditis/orunmila@latest
+    - go install github.com/proditis/mini-tools/cspparse@latest
+    - go install github.com/proditis/mini-tools/certnames@latest
+#    - go install github.com/projectdiscovery/httpx/cmd/httpx@latest
+    - go install github.com/proditis/mini-tools/sniprobe@latest
+    - go install github.com/outersky/har-tools/cmd/harx@latest
+  script:
+    - cp -rp /go/bin .
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - bin/*
+    expire_in: 1 day
+  allow_failure: true
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

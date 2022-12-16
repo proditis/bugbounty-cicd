@@ -1,0 +1,16 @@
+amass:enum:
+  stage: info_gathering:active
+  image: golang:latest
+  script:
+    - ./bin/amass enum -src -ip -brute -min-for-recursive 2 -dir ./ -df ${DOMAINS_LIST} -o ${PWD}/amass.log -log ${PWD}/amass-errors.log
+  artifacts:
+    paths:
+      - amass.log
+      - amass-errors.log
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

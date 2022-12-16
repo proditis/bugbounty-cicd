@@ -1,0 +1,21 @@
+bbot:all:
+  image: debian:bullseye-slim
+  stage: scanning
+  before_script:
+    - apt-get update
+    - apt-get install --no-install-recommends -yqq python pip
+    - pip install bbot
+    - mkdir -p bbot/
+  script:
+    - bbot -t ${DOMAINS_LIST} -f subdomain-enum email-enum cloud-enum web-basic -m naabu gowitness nuclei --allow-deadly --output-dir bbot/ --name "$CI_PROJECT_NAME" --output-module human csv json neo4j
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME:certs"
+    paths:
+      - bbot/*
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - "${DOMAINS_LIST}"
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual

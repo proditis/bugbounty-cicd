@@ -1,0 +1,14 @@
+zap_api_scan:
+  stage: information_gathering
+  image: owasp/zap2docker-weekly
+  before_script:
+    - mkdir -p /zap/wrk
+  script:
+    - zap-api-scan.py -t https://${DOMAIN}/${API_BASE} -f ${API_TYPE}  -w "${DOMAIN}-report.md" -x "${DOMAIN}-report.xml" -r "${DOMAIN}-report.html" -d
+  artifacts:
+    name: "$DOMAIN:$CI_JOB_NAME:zap_api_scan"
+    paths:
+      - wrk/${DOMAIN}-report.*
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web" && $API_BASE != "" && $API_TYPE != ""
+      when: manual
