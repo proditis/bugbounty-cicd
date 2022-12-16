@@ -12,4 +12,5 @@
   * `RATE_LIMIT`: The rate limit to be applied on those tools that support it (default: `5`)
   * `CSP_BASE`: A keyword to search for when we run `cspparse` (default: `example`)
 * Commit and push your changes and watch the pipeline run
+
 ![Gitlab CICD => Pipelines](../images/gitlab-cicd-piplines.png)
