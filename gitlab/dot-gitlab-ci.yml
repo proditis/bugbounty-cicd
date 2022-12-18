@@ -12,6 +12,7 @@ include:
   - .pipelines/0init/go.yml
   - .pipelines/0init/orunmila.yml
   - .pipelines/0init/pre_fetch_binaries.yml
+  - .pipelines/0init/pre_fetch_assets.yml
 # information_gathering:passive
   - .pipelines/info_gathering/passive/assetfinder.yml
   - .pipelines/info_gathering/passive/dns_enum_list.yml
