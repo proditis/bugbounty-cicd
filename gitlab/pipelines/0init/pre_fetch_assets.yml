@@ -1,0 +1,22 @@
+# Fetch any APK files tha may be listed in `android-apps.list`
+pre_fetch_assets:apks:
+  image: python:3-bullseye
+  stage: initialization
+  before_script:
+    - python -m pip install --upgrade pip
+    - pip3 install requests beautifulsoup4 colored progressbar2
+    - mkdir -p bin output
+    - curl -sk https://raw.githubusercontent.com/EngineerDanny/apk-downloader/main/main.py -o bin/apk-downloader
+  script:
+    - for dl in $(<android-apps.list);do python3 bin/apk-downloader ${dl}; mv output/app_name.pk output/${dl}.apk ;done
+  artifacts:
+    name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
+    paths:
+      - output/*.apk
+    expire_in: 1 day
+  allow_failure: true
+  rules:
+    - exists:
+      - android-apps.list
+#    - if: $CI_PIPELINE_SOURCE == "web"
+#      when: manual
