@@ -14,3 +14,11 @@
 * Commit and push your changes and watch the pipeline run
 
 ![Gitlab CICD => Pipelines](../images/gitlab-cicd-piplines.png)
+
+## stages
+The current pipeline has the following stages
+  - `initialization`: For preparing the environment
+  - `info_gathering:passive`: For passive scans
+  - `info_gathering:active`: For active non aggressive scans (ie GET, or ping a host etc)
+  - `infogather_aggregation`: For aggregating the results from all the preceding jobs and for providing an intermediate stage to download all the results
+  - `scanning`: Perform more aggressive scans, fuzzers, port scanners and other automated enumerators (ie bbot)
