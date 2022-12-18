@@ -20,11 +20,8 @@ pre_fetch_binaries:
     - mv ffuf gau httpx subfinder bin/
     - mv amass_linux_amd64/amass bin/
     - mv certgrabber_1.0.4_Linux_x86_64 bin/certgrabber
+    - pip install requests beautifulsoup4 colored progressbar2
   script:
-#    - wget --no-check-certificate https://cdn.echoctf.dev/engagement-template_pre_fetch_binaries.zip
-#    - wget --no-check-certificate https://cdn.echoctf.dev/engagement-template_go_binaries.zip
-#    - unzip engagement-template_pre_fetch_binaries.zip
-#    - unzip engagement-template_go_binaries.zip
     - chmod +x bin/*
   artifacts:
     name: "$CI_PROJECT_NAME:$CI_JOB_NAME"
