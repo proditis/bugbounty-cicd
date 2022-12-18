@@ -6,6 +6,7 @@
 * Rename the `pipelines` folder into `.pipelines` and place under your gitlab project root directory
 * Rename `dot-gitlab-ci.yml` into `.gitlab.-ci.yml` and place under your gitlab project root directory
 * Create a file `domains.list` with your inscope domains
+* (optionally) create a file `android-apps.list` with all the application ID's to be downloaded for later analysis
 * When the pipeline is started from the web you can bypass certain default settings by passing the following variable from the Gitlab web interface
   * `DOMAINS_LIST`: The file holding the inscope domains (default: `domains.list`)
   * `THREADS`: The limit to the threads that will be applied on those tools that support it (default: `3`)
