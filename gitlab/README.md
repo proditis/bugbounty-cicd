@@ -22,3 +22,20 @@ The current pipeline has the following stages
   - `info_gathering:active`: For active non aggressive scans (ie GET, or ping a host etc)
   - `infogather_aggregation`: For aggregating the results from all the preceding jobs and for providing an intermediate stage to download all the results
   - `scanning`: Perform more aggressive scans, fuzzers, port scanners and other automated enumerators (ie bbot)
+
+## Tools included
+* https://github.com/EngineerDanny/apk-downloader
+* https://github.com/OWASP/Amass
+* https://github.com/blacklanternsecurity/bbot
+* https://github.com/ffuf/ffuf
+* https://github.com/lc/gau
+* https://github.com/outersky/har-tools/cmd/harx
+* https://github.com/proditis/mini-tools/certnames
+* https://github.com/proditis/mini-tools/cspparse
+* https://github.com/proditis/mini-tools/sniprobe
+* https://github.com/proditis/orunmila
+* https://github.com/projectdiscovery/httpx
+* https://github.com/projectdiscovery/httpx/cmd/httpx
+* https://github.com/projectdiscovery/subfinder
+* https://github.com/stavinski/certgrabber
+* https://github.com/tomnomnom/assetfinder
